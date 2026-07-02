@@ -1,12 +1,15 @@
 import { useState, useCallback } from 'react';
-import type { UserProfile, Result } from './types';
+import type { UserProfile, Result, SavedResult } from './types';
 import { EXPERIMENTS } from './mock/data';
 import { WelcomePage } from './pages/WelcomePage';
 import { ExperimentPage } from './pages/ExperimentPage';
 import { ResultPage } from './pages/ResultPage';
+import { StatsPage } from './pages/StatsPage';
+import { HistoryPage } from './pages/HistoryPage';
 import { calculateResult } from './utils/scoring';
+import { saveResult, loadResults, computeGlobalStats } from './utils/storage';
 
-type Step = 'welcome' | 'experiment' | 'result';
+type Step = 'welcome' | 'experiment' | 'result' | 'stats' | 'history';
 
 export default function App() {
   const [step, setStep] = useState<Step>('welcome');
@@ -28,9 +31,18 @@ export default function App() {
       const finalAnswers = { ...answers, [experimentId]: choiceId };
       const r = calculateResult(finalAnswers, EXPERIMENTS);
       setResult(r);
+
+      const sr: SavedResult = {
+        id: crypto.randomUUID(),
+        timestamp: Date.now(),
+        profile: profile!,
+        result: r,
+        answers: finalAnswers,
+      };
+      saveResult(sr);
       setStep('result');
     }
-  }, [currentExp, answers]);
+  }, [currentExp, answers, profile]);
 
   const handlePrev = useCallback(() => {
     if (currentExp > 0) setCurrentExp(prev => prev - 1);
@@ -52,6 +64,28 @@ export default function App() {
             <span className="text-indigo-400">Thought</span>Lab
           </h1>
           <p className="mt-2 text-sm text-slate-400">思想实验 · 光谱分析 · 发现自己</p>
+          {(step === 'result' || step === 'stats' || step === 'history') && (
+            <nav className="mt-4 flex justify-center gap-4 text-sm">
+              <button
+                onClick={() => setStep('result')}
+                className={`rounded-lg px-3 py-1.5 transition-colors ${step === 'result' ? 'bg-indigo-500/20 text-indigo-300' : 'text-slate-400 hover:text-white'}`}
+              >
+                结果
+              </button>
+              <button
+                onClick={() => setStep('stats')}
+                className={`rounded-lg px-3 py-1.5 transition-colors ${step === 'stats' ? 'bg-indigo-500/20 text-indigo-300' : 'text-slate-400 hover:text-white'}`}
+              >
+                统计
+              </button>
+              <button
+                onClick={() => setStep('history')}
+                className={`rounded-lg px-3 py-1.5 transition-colors ${step === 'history' ? 'bg-indigo-500/20 text-indigo-300' : 'text-slate-400 hover:text-white'}`}
+              >
+                历史
+              </button>
+            </nav>
+          )}
         </header>
 
         {step === 'welcome' && (
@@ -73,6 +107,12 @@ export default function App() {
             profile={profile}
             onRestart={handleRestart}
           />
+        )}
+        {step === 'stats' && (
+          <StatsPage stats={computeGlobalStats(loadResults())} />
+        )}
+        {step === 'history' && (
+          <HistoryPage results={loadResults()} onRestart={handleRestart} />
         )}
       </div>
     </div>
