@@ -46,3 +46,11 @@ export interface Result {
   similarFigures: SimilarFigure[];
   summary: string;
 }
+
+export interface SavedResult {
+  id: string;
+  timestamp: number;
+  profile: UserProfile;
+  result: Result;
+  answers: Record<string, string>;
+}
