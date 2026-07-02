@@ -1,32 +1,29 @@
-# React + TypeScript + Vite
+# ThoughtLab — 思想实验 · 光谱分析 · 发现自己
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+ThoughtLab 是一个交互式思想实验平台。用户经历一系列经典思想实验（电车难题、无知之幕、忒修斯之船等），在每个实验中做出选择，最终获得一份个性化的思想光谱报告。
 
-Currently, two official plugins are available:
+## 功能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **8 个经典思想实验**：电车难题、无知之幕、忒修斯之船、体验机器、天桥难题、定时炸弹、中文房间、离开欧梅拉斯
+- **6 维思想光谱**：功利主义、自由意志、集体主义、理性主义、平等主义、人道主义
+- **信仰体系匹配**：对比 8 种哲学体系，找出最接近的
+- **名人相似度**：与 12 位思想家的匹配度
+- **统计数据**：查看自己的历史结果和趋势
 
-## React Compiler
+## 技术栈
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React 19 + TypeScript + Vite + TailwindCSS v4
 
-## Expanding the Oxlint configuration
+## 开发
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev      # 开发服务器
+npm run build    # 构建生产版本
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## 部署
+
+推送到 master 分支，GitHub Actions 自动构建并部署到 GitHub Pages：
+
+https://coldbrewtea.github.io/thought-lab/
