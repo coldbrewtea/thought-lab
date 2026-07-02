@@ -16,7 +16,14 @@ export function WelcomePage({ onSubmit }: Props) {
   const [education, setEducation] = useState('');
   const [country, setCountry] = useState('');
 
-  const canSubmit = name.trim() && religion && education && country;
+  const canSubmit = name.trim().length > 0;
+
+  const buildProfile = (): UserProfile => ({
+    name: name.trim() || '匿名',
+    religion: religion || '未填写',
+    education: education || '未填写',
+    country: country || '未填写',
+  });
 
   return (
     <div className="space-y-8">
@@ -32,7 +39,8 @@ export function WelcomePage({ onSubmit }: Props) {
       </div>
 
       <div className="rounded-2xl bg-white/5 p-8">
-        <h3 className="mb-6 text-lg font-medium">基本信息</h3>
+        <h3 className="mb-2 text-lg font-medium">基本信息 <span className="text-sm font-normal text-slate-500">（可选）</span></h3>
+        <p className="mb-6 text-sm text-slate-400">填写后可以查看与你背景相似的人的统计数据，也可以跳过。</p>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm text-slate-400">昵称</label>
@@ -86,7 +94,7 @@ export function WelcomePage({ onSubmit }: Props) {
 
         <button
           disabled={!canSubmit}
-          onClick={() => onSubmit({ name: name.trim(), religion, education, country })}
+          onClick={() => onSubmit(buildProfile())}
           className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-4 font-medium transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
         >
           开始思想之旅
